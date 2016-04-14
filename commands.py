@@ -12,7 +12,7 @@ def start():
 
 
 def do_command(player, map):
-    sentence = input('Hi '+player.name+'. So, what do you want to do? ').lower()
+    sentence = input('\nHi '+player.name+'. So, what do you want to do? ').lower()
 
     command = sentence.split(' ')[0]
     try:
@@ -41,7 +41,8 @@ def do_command(player, map):
             dude()
 
     except Exception as e:
-        print(player['name'] + '\'s brain sez, "I don\'t understand - ' + sentence + '"')
+        print('\n' + player.name + '\'s brain sez, "I don\'t understand - ' + sentence + '"')
+        display_help()
     return True
 
 
@@ -51,15 +52,15 @@ def dude():
 
 def display_help():
     print("""
-Your commands are\n
-help\n
-quit\n
-attack with item\n
-go direction\n
-where am i\n
-look around\n
-take item\n
-health\n""")
+Your commands are
+help
+quit
+attack with item
+go direction
+where am i
+look around
+take item
+health""")
 
 
 def attack(player, map, item_name):
@@ -93,21 +94,22 @@ def look_around(player, map):
 
 def take(player, map, item_name):
     found = False
-    for index, item in enumerate(map[player['location']].items):
+    for index, item in enumerate(map[player.location].items):
         if item_name == item['name']:
             player.items.append(item)
-            del map[player['location']].items[index]
+            del map[player.location].items[index]
             found = True
             break
     if found:
-        print('The ' + item_name + ' is yours.')
+        print('\nThe ' + item_name + ' is yours.')
     if not found:
-        print('There is no ' + item_name + ' in ' + map[player['location']].name + '.')
+        print('\nThere is no ' + item_name + ' in ' + map[player.location].name + '.')
 
 
 def health(player):
-    dude()
-    print(player['name'], 'Health', player['health'], 'Items', player['items'])
+    print("\n%s's health is %d and is carrying the following items "%(player.name,player.health))
+    for index, item in enumerate(player.items):
+        print("%d. %s"%(index+1,item['name']))
 
 
 FIRST_ITEM = 0
@@ -129,3 +131,6 @@ class Player():
         self.location = [0, 0]
         self.health = 100
         self.items = [ITEMS[FIRST_ITEM]]
+        
+if __name__ == '__main__':
+    start()
