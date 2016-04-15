@@ -1,8 +1,19 @@
+"""Where everything begins.
+
+The player is created and the map is imported.
+The game loop starts and only ends if the player chooses to quit.
+
+"""
 from player import Player
 from schoolmap import school_map
 
 
 def start():
+    """Where everything gets kicked off
+
+    Create the player and start the command loop.
+    Only end if do_command returns False
+    """
     player_name = input('What is your name? ')
     player = Player(player_name)
     keep_going = True
@@ -11,6 +22,15 @@ def start():
 
 
 def do_command(player):
+    """Get a command and do something.
+
+    1. Get a command from the player.
+    2. If the command is found, pull any other data need for the command from the sentence.
+    3. Call the command function.
+
+    If a command is not found 'else' then show an error.
+    If the command sentence is incomplete an exception is thrown 'except' and an error is shown.
+    """
     sentence = input('\nHi ' + player.name + '. So, what do you want to do? ').lower()
     command = sentence.split(' ')[0]
     try:
@@ -48,10 +68,17 @@ def do_command(player):
 
 
 def dude():
+    """dude
+    You can add your own funny commands.
+    Just create a function and call it from the do_command() if statement
+    """
     print("I know what dude I am!\nI'm the dude, playing a dude, disguised as another dude!")
 
 
 def display_help():
+    """help
+    Add commands to this or leave them off to make them secret.
+    """
     print("""
 Your commands are:
 help
@@ -65,6 +92,14 @@ health""")
 
 
 def attack(player, item_name):
+    """attack with item
+    Make sure the player has the item.
+    Make sure that a live monster is in the room.
+    Deduct monster health by the attack value on the item.
+    Counter attack by the monster does the same to the player.
+    If the monster health < 1 then it is dead.
+    If the player's health is < 1 then the player becomes a zombie.
+    """
     attack_status = "\nThere was no attack. Either you don\'t have a %s or there is no monster." % item_name
 
     for index, item in enumerate(player.items):
@@ -97,6 +132,10 @@ def attack(player, item_name):
 
 
 def go(player, direction):
+    """go direction
+    Player can travel north, south, east or west.
+    Player may not go off the map...abyss.
+    """
     current_location = player.location
     try:
         if direction == 'north':
@@ -116,10 +155,14 @@ def go(player, direction):
 
 
 def where_am_i(player):
+    """where am i
+    List the details of the current room.
+    """
     print(school_map[player.location].get_description())
 
 
 def look_direction(location, direction):
+    """Not a command. Prints the description of the room in the direction related to the players current location."""
     try:
         x, y = location
         if direction == 'north':
@@ -136,6 +179,9 @@ def look_direction(location, direction):
 
 
 def look_around(player):
+    """look around
+    List the current room description and list the names of all the rooms around the player.
+    """
     print(school_map[player.location[0]][player.location[1]].get_description())
     look_direction(player.location, 'north')
     look_direction(player.location, 'east')
@@ -144,6 +190,9 @@ def look_around(player):
 
 
 def take(player, item_name):
+    """take item
+    Make sure the item is in the room. If it is add to the player items and remove it from the room.
+    """
     found = False
     for index, item in enumerate(school_map[player.location[0]][player.location[1]].items):
         if item_name == item['name']:
@@ -158,6 +207,9 @@ def take(player, item_name):
 
 
 def health(player):
+    """health
+    Show the players name, health and items.
+    """
     print(player.get_description())
 
 
