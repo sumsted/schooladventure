@@ -7,7 +7,7 @@ class Room():
         self.name = 'Some Random Room' if name is None else name
         self.items = random.sample(ITEMS, random.randint(0, 2))
         monster = random.sample(MONSTERS, random.randint(0, 1))
-        self.monster = monster[0] if len(monster) > 0 else None
+        self.monster = dict(monster[0]) if len(monster) > 0 else None
 
     def get_description(self):
         description = "\nThis is the %s." % self.name
