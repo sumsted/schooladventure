@@ -1,27 +1,29 @@
 import random
+from setup import MONSTERS, ITEMS
 
 
 class Room():
-    NAME = "A room"
-    DESCRIPTION = "This is a plain room, nothing special"
-    ATTACK = {"weapon": "effectiveness"}
-
-    def __init__(self):
-        self.items = [""]
-        self.monster = {"": 0}
+    def __init__(self, name=None):
+        self.name = 'Some Random Room' if name is None else name
+        self.items = random.sample(ITEMS, random.randint(0, 2))
+        monster = random.sample(MONSTERS, random.randint(0, 1))
+        self.monster = monster[0] if len(monster) > 0 else None
 
     def get_description(self):
-        description = self.DESCRIPTION
-        if self.monster.values()[0] > 0:
-            description += "\nThere is a " + self.monster.keys()[0] + " in this room and he's really mad."
+        description = "\nThis is the %s." % self.name
+        if len(self.items) > 0:
+            description += "\nThere's some stuff on the floor."
+            for index, item in enumerate(self.items):
+                description += "\n%d. %s" % (index + 1, item['name'])
+        if self.monster is not None:
+            if self.monster['health'] > 0:
+                description += "\nThere's a %s in here that looks angry." % self.monster['name']
+            else:
+                description += "\nThere's a dead %s laying on the floor." % self.monster['name']
         return description
-
-    def attack(self, weapon):
-        r = random.randint(0, 9)
-
 
 
     @staticmethod
     def _get_item(list_of_items):
-        r = random.randint(0,len(list_of_items)-1)
+        r = random.randint(0, len(list_of_items) - 1)
         return list_of_items[r]
