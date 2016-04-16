@@ -1,5 +1,5 @@
 import random
-from setup import MONSTERS, ITEMS
+from items_monsters import MONSTERS, ITEMS
 
 
 class Room():

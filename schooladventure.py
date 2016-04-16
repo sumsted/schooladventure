@@ -62,6 +62,7 @@ def do_command(player):
             display_help()
 
     except Exception as e:
+        print(str(e))
         print('\n' + player.name + '\'s brain sez, "I don\'t understand - ' + sentence + '"')
         display_help()
     return True
@@ -101,22 +102,23 @@ def attack(player, item_name):
     If the player's health is < 1 then the player becomes a zombie.
     """
     attack_status = "\nThere was no attack. Either you don\'t have a %s or there is no monster." % item_name
-
+    
+    player_room = school_map[player.location[0]][player.location[1]]
+    
     for index, item in enumerate(player.items):
         if item_name == item['name'] and school_map[player.location[0]][player.location[1]].monster['health'] > 0:
             print("\n%s shall feel the wrath of your %s." % (
-            school_map[player.location[0]][player.location[1]].monster['name'], item['name']))
+            player_room.monster['name'], item['name']))
             if item['attack'] < 5:
                 print("\nYou know, %s is not a very effective weapon." % item['name'])
-            school_map[player.location[0]][player.location[1]].monster['health'] -= item['attack']
-            if school_map[player.location[0]][player.location[1]].monster['health'] > 0:
-                print("\n%s's health is now %d." % (school_map[player.location[0]][player.location[1]].monster['name'],
-                                                    school_map[player.location[0]][player.location[1]].monster[
-                                                        'health']))
-                print("\n%s counter attacks NOW!" % school_map[player.location[0]][player.location[1]].monster['name'])
-                player.health -= school_map[player.location[0]][player.location[1]].monster['attack']
+            player_room.monster['health'] -= item['attack']
+            if player_room.monster['health'] > 0:
+                print("\n%s's health is now %d." % (player_room.monster['name'],
+                                                    player_room.monster['health']))
+                print("\n%s counter attacks NOW!" % player_room.monster['name'])
+                player.health -= player_room.monster['attack']
                 print("\nYou lose %d health points. \nYour health is now %d." %
-                      (school_map[player.location[0]][player.location[1]].monster['attack'], player.health))
+                      (player_room.monster['attack'], player.health))
                 if player.health < 1:
                     player.name = 'Zombie ' + player.name
                     print("\n%s, you are now a zombie!" % player.name)
@@ -124,7 +126,7 @@ def attack(player, item_name):
                     print("\n%s, your health is quite low!" % player.name)
             else:
                 print("\n%s is now dead. Long live %s!" %
-                      (school_map[player.location[0]][player.location[1]].monster['name'], player.name))
+                      (player_room.monster['name'], player.name))
             attack_status = "\nAttack complete."
             break
 
@@ -136,18 +138,25 @@ def go(player, direction):
     Player can travel north, south, east or west.
     Player may not go off the map...abyss.
     """
-    current_location = player.location
+    x, y = player.location
     try:
         if direction == 'north':
-            player.location[0] -= 1
+            x -= 1
         elif direction == 'south':
-            player.location[0] += 1
+            x += 1
         elif direction == 'east':
-            player.location[1] += 1
+            y += 1
         elif direction == 'west':
-            player.location[1] -= 1
+            y -= 1
         else:
-            print('\n%s is not a direction. Try north, south, east or west.' % direction)
+            print('\nTry north, south, east, or west.')
+        
+        if x > len(school_map) or x < 0 or y > len(school_map[x]) or y < 0:
+            print('\n%s\'s brain sez, "Huh I can\'t let you go there. That\'s the abyss."' % player.name)
+        else:
+            player.location[0] = x
+            player.location[1] = y
+        
         look_around(player)
     except:
         player.location = current_location
@@ -158,7 +167,7 @@ def where_am_i(player):
     """where am i
     List the details of the current room.
     """
-    print(school_map[player.location].get_description())
+    print(school_map[player.location[0]][player.location[1]].get_description())
 
 
 def look_direction(location, direction):
@@ -173,7 +182,13 @@ def look_direction(location, direction):
             y += 1
         elif direction == 'west':
             y -= 1
-        print("To the %s is %s" % (direction, school_map[x][y].name))
+            
+        if x > len(school_map) or x < 0 or y > len(school_map[x]) or y < 0:
+            room = 'the abyss'
+        else:
+            room = school_map[x][y].name
+        
+        print("To the %s is %s" % (direction, room))
     except:
         print("To the %s is the abyss." % direction)
 
@@ -194,16 +209,17 @@ def take(player, item_name):
     Make sure the item is in the room. If it is add to the player items and remove it from the room.
     """
     found = False
-    for index, item in enumerate(school_map[player.location[0]][player.location[1]].items):
+    player_room = school_map[player.location[0]][player.location[1]]
+    for index, item in enumerate(player_room.items):
         if item_name == item['name']:
             player.items.append(item)
-            del school_map[player.location[0]][player.location[1]].items[index]
+            del player_room.items[index]
             found = True
             break
     if found:
         print('\nThe ' + item_name + ' is yours.')
     if not found:
-        print('\nThere is no ' + item_name + ' in ' + school_map[player.location[0]][player.location[1]].name + '.')
+        print('\nThere is no ' + item_name + ' in ' + player_room.name + '.')
 
 
 def health(player):

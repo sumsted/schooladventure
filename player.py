@@ -1,4 +1,4 @@
-from setup import ITEMS, STARTING_ITEM
+from items_monsters import ITEMS, STARTING_ITEM
 
 
 class Player():
