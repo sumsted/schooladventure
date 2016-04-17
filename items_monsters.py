@@ -1,4 +1,18 @@
+""" All possible items and monsters are kept here.
+These are imported into room when building each room object.
 
+ITEMS - list of dictionaries containing
+  name - name of the room
+  attack - number of points deducted from monster during attack
+  health - number of points added to player if eaten
+
+
+MONSTERS - list of dictionaries containing
+  name - name of monster
+  attack - number of points deducted from player during counter attack
+  health - starting health of monster
+
+"""
 STARTING_ITEM = 0
 
 ITEMS = [
@@ -8,11 +22,11 @@ ITEMS = [
     {'name': 'thimble', 'attack': 1, 'health': 0},
     {'name': 'branch', 'attack': 6, 'health': 1},
     {'name': 'book', 'attack': 4, 'health': 2},
-    {'name': 'marker', 'attack': 2, 'health':-1},
+    {'name': 'marker', 'attack': 2, 'health': -1},
     {'name': 'teacher', 'attack': 4, 'health': 2},
-    {'name': 'mt dew', 'attack': 1, 'health': 6},
+    {'name': 'soda', 'attack': 1, 'health': 6},
     {'name': 'skittles', 'attack': 0, 'health': 4},
-    {'name': 'chicken strips', 'attack': 0, 'health': 10}
+    {'name': 'chicken', 'attack': 0, 'health': 10}
 ]
 
 MONSTERS = [
